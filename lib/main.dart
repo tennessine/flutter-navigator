@@ -1,69 +1,74 @@
 import 'package:flutter/material.dart';
 
-class Product {
-  final String title;
-  final String description;
-
-  Product(this.title, this.description);
-}
-
 void main() {
   runApp(MaterialApp(
-    title: '传递数据实例',
-    home: ProductList(
-      products: List<Product>.generate(
-        20,
-        (i) => Product('商品 $i', '这是一个商品详情 $i'),
-      ),
-    ),
+    debugShowCheckedModeBanner: false,
+    title: '页面跳转返回数据示例',
+    home: FirstPage(),
   ));
 }
 
-class ProductList extends StatelessWidget {
-  final List<Product> products;
-
-  ProductList({Key key, @required this.products}) : super(key: key);
+class FirstPage extends StatelessWidget {
+  _navigateToSecondPage(BuildContext context) async {
+    final result = await Navigator.push(context, MaterialPageRoute(
+      builder: (BuildContext context) {
+        return SecondPage();
+      },
+    ));
+    print(result);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('商品列表'),
+        title: Text('页面跳转返回数据示例'),
+        elevation: 0.0,
       ),
-      body: ListView.builder(
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(products[index].title),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) {
-                  return ProductDetail(product: products[index]);
-                }),
-              );
-            },
-          );
-        },
+      body: Center(
+        child: RaisedButton(
+          onPressed: () {
+            _navigateToSecondPage(context);
+          },
+          child: Text('跳转到第二个页面'),
+        ),
       ),
     );
   }
 }
 
-class ProductDetail extends StatelessWidget {
-  final Product product;
-
-  ProductDetail({Key key, @required this.product}) : super(key: key);
-
+class SecondPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${product.title}'),
+        title: Text('选择一条数据'),
+        elevation: 0.0,
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Text('${product.description}'),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: RaisedButton(
+                onPressed: () {
+                  Navigator.pop(context, 'Hi google');
+                },
+                child: Text('Hi google'),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: RaisedButton(
+                onPressed: () {
+                  Navigator.pop(context, 'Hi flutter');
+                },
+                child: Text('Hi flutter'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
